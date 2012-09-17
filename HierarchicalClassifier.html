@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Hierarchical classifier</title>
+</head>
+<body>
+
+<script>
+	(function( d, undefined ){
+		"use strict";
+
+		var graph = undefined;
+
+		function getInstanceByName( root, nodeName ){
+
+			var rootInstance = root.getInstance;
+
+			// passed nodeName is the root Node?
+			if ( rootInstance.name === nodeName ) {
+				//return him
+				return rootInstance;
+			} else {
+
+				for (var node in rootInstance.childs) {
+					if ( rootInstance.childs[node].name === nodeName ) {
+						return rootInstance.childs[node];
+					}
+				}
+
+			}
+		}
+
+		/**
+		 * Function-constructor for Root object (Singleton)
+		 * @param item that wil be an root Node object
+		 * @return {RootSingleton}
+		 * @constructor
+		 */
+		function RootSingleton ( item ) {
+			if (!RootSingleton.__instance) {
+				RootSingleton.__instance = this;
+			} else {
+				return RootSingleton.__instance;
+			}
+			this.getInstance = item;
+		}
+
+		/**
+		 * Function-constructor for Node object
+		 * @param child item to add
+		 * @param [parent] of added child item
+		 * @constructor
+		 */
+		function Node ( child, parent ){
+			var root = new RootSingleton(this);
+
+			this.name = child;
+//			this.parent = ( parent instanceof Node || getInstanceByName( root, parent ) ) || undefined;
+			this.parent = getInstanceByName( root, parent ) || undefined;
+			if ( !!parent ) {
+				this.parent.childs.push( this );
+			}
+			this.childs = [];
+		}
+
+		Node.prototype.addChilds = function( node ){
+			if( node instanceof Array ){
+				for( var i in node ){
+					this.childs.push( node[i] );
+				}
+			} else {
+				this.childs.push( node );
+			}
+		};
+
+		Node.prototype.getParent = function(){
+			return this.parent;
+		};
+
+		Node.prototype.getChilds = function(){
+			var self = this;
+			return (function(){
+				var res = [];
+				var temp = null;
+				for( var i in self.childs ){
+					temp = self.childs[i];
+					if ( temp.childs.length > 0 ){
+						var t = temp.getChilds();
+						for (var j in t) {
+							res.push( t[j] );
+						}
+					} else {
+						res.push( temp );
+					}
+				}
+				return res;
+			})();
+		};
+
+
+		var root = new Node( 'Млекопитающие' );
+		new Node( 'Кошки', 'Млекопитающие' );
+		new Node( 'Мыши', 'Млекопитающие' );
+		new Node( 'Том', 'Кошки' );
+		new Node( 'Джерри', 'Мыши' );
+
+		console.log( root.getChilds() );
+
+	})( document );
+</script>
+
+</body>
+</html>
