@@ -9,28 +9,7 @@
 <script>
 	(function( d, undefined ){
 		"use strict";
-
-		var graph = undefined;
-
-		function getInstanceByName( root, nodeName ){
-
-			var rootInstance = root.getInstance;
-
-			// passed nodeName is the root Node?
-			if ( rootInstance.name === nodeName ) {
-				//return him
-				return rootInstance;
-			} else {
-
-				for (var node in rootInstance.childs) {
-					if ( rootInstance.childs[node].name === nodeName ) {
-						return rootInstance.childs[node];
-					}
-				}
-
-			}
-		}
-
+/**********************************************************************************************************************/
 		/**
 		 * Function-constructor for Root object (Singleton)
 		 * @param item that wil be an root Node object
@@ -45,7 +24,7 @@
 			}
 			this.getInstance = item;
 		}
-
+/**********************************************************************************************************************/
 		/**
 		 * Function-constructor for Node object
 		 * @param child item to add
@@ -53,11 +32,8 @@
 		 * @constructor
 		 */
 		function Node ( child, parent ){
-			var root = new RootSingleton(this);
-
 			this.name = child;
-//			this.parent = ( parent instanceof Node || getInstanceByName( root, parent ) ) || undefined;
-			this.parent = getInstanceByName( root, parent ) || undefined;
+			this.parent = parent || undefined;
 			if ( !!parent ) {
 				this.parent.childs.push( this );
 			}
@@ -98,12 +74,46 @@
 			})();
 		};
 
+/**********************************************************************************************************************/
+		/**
+		 * Function-constructor for Graph object
+		 * @constructor
+		 */
+		function Graph( child ) {
+			this.root = new Node( child );
+		}
 
-		var root = new Node( 'Млекопитающие' );
-		new Node( 'Кошки', 'Млекопитающие' );
-		new Node( 'Мыши', 'Млекопитающие' );
-		new Node( 'Том', 'Кошки' );
-		new Node( 'Джерри', 'Мыши' );
+		Graph.prototype.getInstanceByName = function( nodeName ){
+
+			var rootInstance = this.root;
+
+			// passed nodeName is the root Node?
+			if ( rootInstance.name === nodeName ) {
+				//return him
+				return rootInstance;
+			} else {
+
+				for (var node in rootInstance.childs) {
+					if ( rootInstance.childs[node].name === nodeName ) {
+						return rootInstance.childs[node];
+					}
+				}
+
+			}
+		};
+
+		Graph.prototype.addNode = function( childNode, parentNode ){
+			new Node( childNode, Graph.getInstanceByName( parentNode  ) );
+		};
+
+		Graph.prototype.search = function(){};
+
+/**********************************************************************************************************************/
+		var graph = new Graph( 'Млекопитающие' );
+		graph.addNode( 'Кошки', 'Млекопитающие' );
+		graph.addNode( 'Мыши', 'Млекопитающие' );
+		graph.addNode( 'Том', 'Кошки' );
+		graph.addNode( 'Джерри', 'Мыши' );
 
 		console.log( root.getChilds() );
 
