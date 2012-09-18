@@ -9,34 +9,17 @@
 <script>
 	(function( d, undefined ){
 		"use strict";
-/**********************************************************************************************************************/
-		/**
-		 * Function-constructor for Root object (Singleton)
-		 * @param item that wil be an root Node object
-		 * @return {RootSingleton}
-		 * @constructor
-		 */
-		function RootSingleton ( item ) {
-			if (!RootSingleton.__instance) {
-				RootSingleton.__instance = this;
-			} else {
-				return RootSingleton.__instance;
-			}
-			this.getInstance = item;
-		}
+
 /**********************************************************************************************************************/
 		/**
 		 * Function-constructor for Node object
-		 * @param child item to add
-		 * @param [parent] of added child item
+		 * @param childName name of created Node
+		 * @param [parent] of added Node
 		 * @constructor
 		 */
-		function Node ( child, parent ){
-			this.name = child;
-			this.parent = parent || undefined;
-			if ( !!parent ) {
-				this.parent.childs.push( this );
-			}
+		function Node ( childName, parent ){
+			this.name = childName;
+			this.parent = parent instanceof Node ? parent : undefined;
 			this.childs = [];
 		}
 
@@ -50,25 +33,23 @@
 			}
 		};
 
-		Node.prototype.getParent = function(){
-			return this.parent;
-		};
-
-		Node.prototype.getChilds = function(){
+		Node.prototype.getChilds = function( ){
 			var self = this;
-			return (function(){
+
+			return (function getChild(){
 				var res = [];
-				var temp = null;
-				for( var i in self.childs ){
-					temp = self.childs[i];
-					if ( temp.childs.length > 0 ){
-						var t = temp.getChilds();
-						for (var j in t) {
-							res.push( t[j] );
+
+				for( var i in self.childs ) {
+
+					var node = self.childs[i];
+					var childs = node.getChilds( );
+					if( !!childs && childs.length ) {
+						for ( var i in childs ) {
+							res.push( childs[i] );
 						}
-					} else {
-						res.push( temp );
 					}
+					res.push( node );
+
 				}
 				return res;
 			})();
@@ -81,32 +62,58 @@
 		 */
 		function Graph( child ) {
 			this.root = new Node( child );
+			console.log( this.root );
+
+			this.search = function( nodeName ){
+
+				var rootInstance = this.root;
+
+				// passed nodeName is the root Node?
+				if ( rootInstance.name === nodeName ) {
+					//return him
+					return rootInstance;
+				} else {
+
+					for ( var node in rootInstance.childs ) {
+						if ( rootInstance.childs[node].name === nodeName ) {
+							return rootInstance.childs[node];
+						}
+					}
+
+				}
+			};
+
+			this.addNode = function( childNode, parentNode ){
+
+				var parent = this.search( parentNode );
+				var node = new Node( childNode, parent );
+				if ( !!parent ) {
+					parent.addChilds( node );
+				}
+				console.log( node );
+
+			};
+
+			this.deleteNode = function( deletedNodeName ){
+				var deletedNode = this.search( deletedNodeName );
+				if ( !!deletedNode ) {
+
+
+
+				}
+				var parent = this.search( parentNode );
+				var node = new Node( deletedNodeName, parent );
+				if ( !!parent ) {
+					parent.addChilds( node );
+				}
+				console.log( node );
+
+			};
+
 		}
 
-		Graph.prototype.getInstanceByName = function( nodeName ){
 
-			var rootInstance = this.root;
 
-			// passed nodeName is the root Node?
-			if ( rootInstance.name === nodeName ) {
-				//return him
-				return rootInstance;
-			} else {
-
-				for (var node in rootInstance.childs) {
-					if ( rootInstance.childs[node].name === nodeName ) {
-						return rootInstance.childs[node];
-					}
-				}
-
-			}
-		};
-
-		Graph.prototype.addNode = function( childNode, parentNode ){
-			new Node( childNode, Graph.getInstanceByName( parentNode  ) );
-		};
-
-		Graph.prototype.search = function(){};
 
 /**********************************************************************************************************************/
 		var graph = new Graph( 'Млекопитающие' );
@@ -115,7 +122,7 @@
 		graph.addNode( 'Том', 'Кошки' );
 		graph.addNode( 'Джерри', 'Мыши' );
 
-		console.log( root.getChilds() );
+		console.log( graph.search( 'Млекопитающие' ).getChilds( ) );
 
 	})( document );
 </script>
