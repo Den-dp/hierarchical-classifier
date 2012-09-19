@@ -43,10 +43,8 @@
 
 					var node = self.childs[i];
 					var childs = node.getChilds( );
-					if( !!childs && childs.length ) {
-						for ( var i in childs ) {
-							res.push( childs[i] );
-						}
+					for ( var i in childs ) {
+						res.push( childs[i] );
 					}
 					res.push( node );
 
@@ -90,24 +88,28 @@
 				if ( !!parent ) {
 					parent.addChilds( node );
 				}
-				console.log( node );
 
 			};
 
-			this.deleteNode = function( deletedNodeName ){
-				var deletedNode = this.search( deletedNodeName );
+			/**
+			 * Delete passed node from graph
+			 *
+			 * TODO create deep recursive deleting
+			 * @param deletedNode - name or object reference of deleting node
+			 */
+			this.deleteNode = function( deletedNode ){
+				if ( !(deletedNode instanceof Node) ){
+					deletedNode = this.search( deletedNode );
+				}
 				if ( !!deletedNode ) {
-
-
-
+					var parent = deletedNode.parent;
+					if ( !!parent ) {
+						var indexToDelete = parent.childs.indexOf( deletedNode );
+						if ( indexToDelete >= 0 ) {
+							parent.childs.splice(indexToDelete,1);
+						}
+					}
 				}
-				var parent = this.search( parentNode );
-				var node = new Node( deletedNodeName, parent );
-				if ( !!parent ) {
-					parent.addChilds( node );
-				}
-				console.log( node );
-
 			};
 
 		}
@@ -122,8 +124,10 @@
 		graph.addNode( 'Том', 'Кошки' );
 		graph.addNode( 'Джерри', 'Мыши' );
 
-		console.log( graph.search( 'Млекопитающие' ).getChilds( ) );
+		graph.deleteNode( 'Кошки' );
+		graph.addNode( 'Зайцы', 'Млекопитающие' );
 
+		console.log( graph.search( 'Млекопитающие' ).getChilds( ) );
 	})( document );
 </script>
 
