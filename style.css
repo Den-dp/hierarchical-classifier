@@ -1,0 +1,9 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	}
+.console {
+	display: block;
+	width: 350px;
+	margin: 20px auto;
+	}

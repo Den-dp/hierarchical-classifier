@@ -3,146 +3,25 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Hierarchical classifier</title>
-	<style>
-		html, body {
-			margin: 0;
-			padding: 0;
-			}
-		.console {
-			display: block;
-			width: 350px;
-			margin: 20px auto;
-			}
-	</style>
+
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="command-box.css">
+	<link rel="stylesheet" href="graph.css">
+
+	<script src="../d3/d3.js"></script>
+	<script src="../d3/d3.geom.js"></script>
+	<script src="../d3/d3.layout.js"></script>
+	<script src="command-box/command-box.js"></script>
 </head>
 <body>
 
-<input class="console" type="text" id="">
+<div class="console-wrapper">
+	<input type="text" class="simple-command-box">
+</div>
 
-<script>
-	(function( d, undefined ){
-		"use strict";
-
-/**********************************************************************************************************************/
-		/**
-		 * Function-constructor for Node object
-		 * @param childName name of created Node
-		 * @param [parent] of added Node
-		 * @constructor
-		 */
-		function Node ( childName, parent ){
-			this.name = childName;
-			this.parent = parent instanceof Node ? parent : undefined;
-			this.childs = [];
-		}
-
-		Node.prototype.addChilds = function( node ){
-			if( node instanceof Array ){
-				for( var i in node ){
-					this.childs.push( node[i] );
-				}
-			} else {
-				this.childs.push( node );
-			}
-		};
-
-		Node.prototype.getChilds = function( ){
-			var self = this;
-
-			return (function getChild(){
-				var res = [];
-
-				for( var i in self.childs ) {
-
-					var node = self.childs[i];
-					var childs = node.getChilds( );
-					for ( var i in childs ) {
-						res.push( childs[i] );
-					}
-					res.push( node );
-
-				}
-				return res;
-			})();
-		};
-
-/**********************************************************************************************************************/
-		/**
-		 * Function-constructor for Graph object
-		 * @constructor
-		 */
-		function Graph( child ) {
-			this.root = new Node( child );
-			console.log( this.root );
-
-			this.search = function( nodeName ){
-
-				var rootInstance = this.root;
-
-				// passed nodeName is the root Node?
-				if ( rootInstance.name === nodeName ) {
-					//return him
-					return rootInstance;
-				} else {
-
-					for ( var node in rootInstance.childs ) {
-						if ( rootInstance.childs[node].name === nodeName ) {
-							return rootInstance.childs[node];
-						}
-					}
-
-				}
-			};
-
-			this.addNode = function( childNode, parentNode ){
-
-				var parent = this.search( parentNode );
-				var node = new Node( childNode, parent );
-				if ( !!parent ) {
-					parent.addChilds( node );
-				}
-
-			};
-
-			/**
-			 * Delete passed node from graph
-			 *
-			 * TODO create deep recursive deleting
-			 * @param deletedNode - name or object reference of deleting node
-			 */
-			this.deleteNode = function( deletedNode ){
-				if ( !(deletedNode instanceof Node) ){
-					deletedNode = this.search( deletedNode );
-				}
-				if ( !!deletedNode ) {
-					var parent = deletedNode.parent;
-					if ( !!parent ) {
-						var indexToDelete = parent.childs.indexOf( deletedNode );
-						if ( indexToDelete >= 0 ) {
-							parent.childs.splice(indexToDelete,1);
-						}
-					}
-				}
-			};
-
-		}
-
-
-
-
-/**********************************************************************************************************************/
-		var graph = new Graph( 'Млекопитающие' );
-		graph.addNode( 'Кошки', 'Млекопитающие' );
-		graph.addNode( 'Мыши', 'Млекопитающие' );
-		graph.addNode( 'Том', 'Кошки' );
-		graph.addNode( 'Джерри', 'Мыши' );
-
-		graph.deleteNode( 'Кошки' );
-		graph.addNode( 'Зайцы', 'Млекопитающие' );
-
-		console.log( graph.search( 'Млекопитающие' ).getChilds( ) );
-	})( document );
-</script>
+<script src="graph-view.js"></script>
+<script src="graph-model.js"></script>
+<script src="commander.js"></script>
 
 </body>
 </html>
