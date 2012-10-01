@@ -11,16 +11,17 @@
 	function Node ( childName, parent ){
 		this.name = childName;
 		this.parent = parent instanceof Node ? parent : undefined;
-		this.childs = [];
+		this.children = [];
+		this.size = 10000;
 	}
 
 	Node.prototype.addChilds = function( node ){
 		if( node instanceof Array ){
 			for( var i in node ){
-				this.childs.push( node[i] );
+				this.children.push( node[i] );
 			}
 		} else {
-			this.childs.push( node );
+			this.children.push( node );
 		}
 	};
 
@@ -30,9 +31,9 @@
 		return (function getChild(){
 			var res = [];
 
-			for( var i in self.childs ) {
+			for( var i in self.children ) {
 
-				var node = self.childs[i];
+				var node = self.children[i];
 				var childs = node.getChilds( );
 				for ( var i in childs ) {
 					res.push( childs[i] );
@@ -63,9 +64,9 @@
 				return rootInstance;
 			} else {
 
-				for ( var node in rootInstance.childs ) {
-					if ( rootInstance.childs[node].name === nodeName ) {
-						return rootInstance.childs[node];
+				for ( var node in rootInstance.children ) {
+					if ( rootInstance.children[node].name === nodeName ) {
+						return rootInstance.children[node];
 					}
 				}
 
@@ -95,9 +96,9 @@
 			if ( !!deletedNode ) {
 				var parent = deletedNode.parent;
 				if ( !!parent ) {
-					var indexToDelete = parent.childs.indexOf( deletedNode );
+					var indexToDelete = parent.children.indexOf( deletedNode );
 					if ( indexToDelete >= 0 ) {
-						parent.childs.splice(indexToDelete,1);
+						parent.children.splice(indexToDelete,1);
 					}
 				}
 			}

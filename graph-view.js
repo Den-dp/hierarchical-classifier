@@ -14,7 +14,7 @@ var force = d3.layout.force()
 var vis = d3.select("body").append("svg:svg")
 	.attr("width", w)
 	.attr("height", h);
-
+    /*
 var json =
 {
 	"name": "flare",
@@ -33,15 +33,25 @@ var json =
 		}]
 };
 
+
 root = json;
 root.fixed = true;
 //	root.x = w / 2;
 //	root.y = h / 2 - 80;
 root.x = w / 2;
 root.y = 20;
-update();
+*/
+//update();
 
-function update() {
+function update( json ) {
+
+	root = json;
+	root.fixed = true;
+	//	root.x = w / 2;
+	//	root.y = h / 2 - 80;
+	root.x = w / 2;
+	root.y = 20;
+
 	var nodes = flatten(root),
 		links = d3.layout.tree().links(nodes);
 

@@ -22,6 +22,19 @@
 <script src="graph-view.js"></script>
 <script src="graph-model.js"></script>
 <script src="commander.js"></script>
+<script>
 
+	var graph = new Graph( 'Млекопитающие' );
+	graph.addNode( 'Кошки', 'Млекопитающие' );
+	graph.addNode( 'Мыши', 'Млекопитающие' );
+	graph.addNode( 'Том', 'Кошки' );
+	graph.addNode( 'Джерри', 'Мыши' );
+
+	graph.deleteNode( 'Кошки' );
+	graph.addNode( 'Зайцы', 'Млекопитающие' );
+
+	console.log( graph.search( 'Млекопитающие' ).getChilds( ) );
+	update(  graph.root );
+</script>
 </body>
 </html>
