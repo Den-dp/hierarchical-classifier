@@ -1,0 +1,3 @@
+[submodule "command-box"]
+	path = command-box
+	url = D:/dev/projects/jsForFun-project/src/simple-console
