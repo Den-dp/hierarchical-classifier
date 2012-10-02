@@ -12,7 +12,6 @@
 		this.name = childName;
 		this.parent = parent instanceof Node ? parent : undefined;
 		this.children = [];
-		this.size = 10000;
 	}
 
 	Node.prototype.addChilds = function( node ){
