@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="../d3/d3.v2.js"></script>
+	<style>
+
+	.node circle {
+	  fill: #fff;
+	  stroke: steelblue;
+	  stroke-width: 1.5px;
+	}
+
+	.node {
+	  font: 10px sans-serif;
+	}
+
+	.link {
+	  fill: none;
+	  stroke: #ccc;
+	  stroke-width: 1.5px;
+	}
+
+</style>
+<style>
+	div.bar {
+	display: inline-block;
+	width: 20px;
+	height: 75px;   /* We'll override this later */
+	background-color: teal;
+	margin-right: 2px;
+}
+</style>
+</head>
+<body>
+	<div id="svg"></div>
+<aside>
+	<button onclick="addData();">add</button>
+	<button onclick="removeData();">remove</button>
+</aside>
+	<script>
+var width = 1024,
+	height = 500,
+	data = {
+		name:"aaa",children:[
+			{name:"bbb",children:[
+				{name:"bbbbbb",children:[]},
+				{name:"cccccc",children:[]}
+			]},
+			{name:"ccc",children:[]},
+	]};
+
+
+
+var cluster = d3.layout.cluster()
+	.size([height, width - 160]);
+
+var diagonal = d3.svg.diagonal()
+	.projection(function(d) { return [d.y, d.x]; });
+
+var svg = d3.select("body").append("svg")
+	.attr("width", width)
+	.attr("height", height)
+  .append("g")
+	.attr("transform", "translate(40,0)");
+
+function update(root) {
+	var nodes = cluster.nodes(root),
+		links = cluster.links(nodes);
+
+	var link = svg.selectAll(".link")
+		.data(links);
+
+	var l = link.enter().append("path")
+		.transition()
+		.attr("class", "link")
+		.attr("d", diagonal);
+
+	var node = svg.selectAll(".node")
+		.data(nodes);
+
+	var n = node.enter().append("g")
+		.attr("class", "node")
+		.attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
+
+	n.append("circle")
+		.transition()
+		.attr("r", 4.5);
+
+	n.append("text")
+		.transition()
+		.attr("dx", function(d) { return d.children ? -8 : 8; })
+		.attr("dy", 3)
+		.style("text-anchor", function(d) { return d.children ? "end" : "start"; })
+		.text(function(d) { return d.name; });
+
+	node.exit()
+		.transition()
+		.attr("r",0)
+		.remove();
+
+	link.exit()
+		.attr("opacity",1)
+		.transition()
+		.attr("opacity",0.2)
+		.remove();
+}
+
+update(data);
+
+
+function addData(){
+	data.children.push({name:Math.random(), children:[]});
+	console.log(data);
+	update(data);
+}
+function removeData(){
+	data.children.pop();
+	update(data);
+}
+
+	</script>
+</body>
+</html>
