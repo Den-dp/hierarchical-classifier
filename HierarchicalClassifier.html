@@ -27,7 +27,8 @@
 <script src="HierarchicalClassifier.js"></script>
 <script>
 
-	var hc = new HierarchicalClassifier( new Graph( 'Геометрический_объект' ), demoCommandBox );
+	var graph = new Graph( 'Геометрический_объект' )
+	var hc = new HierarchicalClassifier( graph, demoCommandBox );
 	hc.add( 'Линия', 'Геометрический_объект');
 		hc.add( 'Прямая', 'Линия');
 		hc.add( 'Ломаная', 'Линия' );
@@ -48,7 +49,7 @@
 		hc.add( 'Конус', 'Объёмное_тело' );
 		hc.add( 'Призма', 'Объёмное_тело' );
 		hc.add( 'Пирамида', 'Объёмное_тело' );
-
+	console.log( graph );
 </script>
 </body>
 </html>

@@ -13,21 +13,21 @@
 	function Node ( childName, parent ){
 		this.name = childName;
 		this.parent = parent instanceof Node ? parent : undefined;
-		this.childrens = [];
+		this.children = [];
 	}
 
 	Node.prototype.addChilds = function( addedNode ){
 		if( addedNode instanceof Array ){
 			for( var i in addedNode ){
-				this.childrens.push( addedNode[i] );
+				this.children.push( addedNode[i] );
 			}
 		} else {
-			this.childrens.push( addedNode );
+			this.children.push( addedNode );
 		}
 	};
 
 	Node.prototype.getNodeChilds = function(){
-		return this.childrens;
+		return this.children;
 	};
 
 	Node.prototype.getAllChilds = function( ){
@@ -125,9 +125,9 @@
 			if ( !!deletedNode ) {
 				var parent = deletedNode.parent;
 				if ( !!parent ) {
-					var indexToDelete = parent.childrens.indexOf( deletedNode );
+					var indexToDelete = parent.children.indexOf( deletedNode );
 					if ( indexToDelete >= 0 ) {
-						parent.childrens.splice(indexToDelete,1);
+						parent.children.splice(indexToDelete,1);
 					}
 				}
 			} else {
