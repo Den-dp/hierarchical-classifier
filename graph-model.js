@@ -1,7 +1,9 @@
-(function( scoupe, undefined ){
+(function( scope, undefined ){
 	"use strict";
-
-/**********************************************************************************************************************/
+	function NodeNotFoundException(){
+		this.name = "NodeNotFoundException";
+	}
+	/**********************************************************************************************************************/
 	/**
 	 * Function-constructor for Node object
 	 * @param childName name of created Node
@@ -11,37 +13,41 @@
 	function Node ( childName, parent ){
 		this.name = childName;
 		this.parent = parent instanceof Node ? parent : undefined;
-		this.children = [];
+		this.childrens = [];
 	}
 
-	Node.prototype.addChilds = function( node ){
-		if( node instanceof Array ){
-			for( var i in node ){
-				this.children.push( node[i] );
+	Node.prototype.addChilds = function( addedNode ){
+		if( addedNode instanceof Array ){
+			for( var i in addedNode ){
+				this.childrens.push( addedNode[i] );
 			}
 		} else {
-			this.children.push( node );
+			this.childrens.push( addedNode );
 		}
 	};
 
-	Node.prototype.getChilds = function( ){
-		var self = this;
+	Node.prototype.getNodeChilds = function(){
+		return this.childrens;
+	};
 
-		return (function getChild(){
-			var res = [];
+	Node.prototype.getAllChilds = function( ){
+		var self = this,
+			allChilds = [];
 
-			for( var i in self.children ) {
+		(function recursiveGetChilds( node ){
 
-				var node = self.children[i];
-				var childs = node.getChilds( );
-				for ( var i in childs ) {
-					res.push( childs[i] );
+			var childs = node.getNodeChilds();
+			for( var i in childs ) {
+				allChilds.push( childs[i] );
+				if( childs[i].getNodeChilds().length ){
+					recursiveGetChilds( childs[i] );
 				}
-				res.push( node );
-
 			}
-			return res;
-		})();
+
+		})(this);
+
+		return allChilds;
+
 	};
 
 /**********************************************************************************************************************/
@@ -49,37 +55,55 @@
 	 * Function-constructor for Graph object
 	 * @constructor
 	 */
-	scoupe.Graph = function Graph( child ) {
-		this.root = new Node( child );
-		console.log( this.root );
+	scope.Graph = function Graph( child ) {
+		this.graphRootNode = !child ? null : new Node( child );
 
-		this.search = function( nodeName ){
+		this.search = function( searchedNodeName, customRootNode ){
+			var rootInstance = arguments.length === 2 ? customRootNode : this.graphRootNode;
 
-			var rootInstance = this.root;
-
-			// passed nodeName is the root Node?
-			if ( rootInstance.name === nodeName ) {
-				//return him
-				return rootInstance;
-			} else {
-
-				for ( var node in rootInstance.children ) {
-					if ( rootInstance.children[node].name === nodeName ) {
-						return rootInstance.children[node];
+			var result = (function (searchedNodeName, rootInstance ){
+				var searchedNodes = [];
+				if ( rootInstance.name === searchedNodeName ) {
+					searchedNodes.push(rootInstance);
+				} else {
+					var allChilds = rootInstance.getAllChilds()
+					for ( var i in allChilds ){
+						if ( allChilds[i].name === searchedNodeName ){
+							searchedNodes.push( allChilds[i] );
+						}
 					}
 				}
+				return searchedNodes;
+			})(searchedNodeName, rootInstance);
 
+			if (result.length === 0) {
+				console.log( '[! Graph.search] При поиске в корневом элементе "'+rootInstance.name+'" и его наследниках не найдено ни одного нода с именем "'+searchedNodeName+'"');
+				throw new NodeNotFoundException();
+			} else if(result.length > 1) {
+				console.log( '[! Graph.search] Каким-то чудом функция поиска нашла более одного элемента, НО будет использован только первый результат!' );
 			}
+			return result[0];
 		};
 
+
+
 		this.addNode = function( childNode, parentNode ){
+			if ( !this.graphRootNode ){
+				this.graphRootNode = new Node(childNode, parentNode)
+			}else{
+				//search for passed node in current graph
+				try {
+					parentNode = this.search( parentNode );
+				} catch(e) {
+					console.log( '[! Graph.addNode] При добавлении нода "' + childNode + '" не удалось найти указанного родителя "'+parentNode+'"');
+					return;
+				}
 
-			var parent = this.search( parentNode );
-			var node = new Node( childNode, parent );
-			if ( !!parent ) {
-				parent.addChilds( node );
+				//create new node
+				var node = new Node( childNode, parentNode );
+				//setup childs
+				parentNode.addChilds( node );
 			}
-
 		};
 
 		/**
@@ -89,20 +113,26 @@
 		 * @param deletedNode - name or object reference of deleting node
 		 */
 		this.deleteNode = function( deletedNode ){
+			var cached = deletedNode;
 			if ( !(deletedNode instanceof Node) ){
-				deletedNode = this.search( deletedNode );
+				//search for passed node in current graph
+				try {
+					deletedNode = this.search( deletedNode );
+				} catch(e) {
+					deletedNode = null;
+				}
 			}
 			if ( !!deletedNode ) {
 				var parent = deletedNode.parent;
 				if ( !!parent ) {
-					var indexToDelete = parent.children.indexOf( deletedNode );
+					var indexToDelete = parent.childrens.indexOf( deletedNode );
 					if ( indexToDelete >= 0 ) {
-						parent.children.splice(indexToDelete,1);
+						parent.childrens.splice(indexToDelete,1);
 					}
 				}
+			} else {
+				console.log( '[! Graph.deleteNode] Не вышло удалить "', cached, '" т.к. его не существет.' );
 			}
 		};
-
 	};
-
 })( this );

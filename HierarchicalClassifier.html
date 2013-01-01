@@ -24,19 +24,31 @@
 <script src="graph-view.js"></script>
 <script src="graph-model.js"></script>
 <script src="commander.js"></script>
+<script src="HierarchicalClassifier.js"></script>
 <script>
 
-	var graph = new Graph( 'Млекопитающие' );
-	graph.addNode( 'Кошки', 'Млекопитающие' );
-	graph.addNode( 'Мыши', 'Млекопитающие' );
-	graph.addNode( 'Том', 'Кошки' );
-	graph.addNode( 'Джерри', 'Мыши' );
+	var hc = new HierarchicalClassifier( new Graph( 'Геометрический_объект' ), demoCommandBox );
+	hc.add( 'Линия', 'Геометрический_объект');
+		hc.add( 'Прямая', 'Линия');
+		hc.add( 'Ломаная', 'Линия' );
+		hc.add( 'Кривая', 'Линия');
 
-	graph.deleteNode( 'Кошки' );
-	graph.addNode( 'Зайцы', 'Млекопитающие' );
+	hc.add( 'Плоская_фигура', 'Геометрический_объект' );
+		hc.add(  'Круг' ,'Плоская_фигура' );
+		hc.add(  'Эллипс' ,'Плоская_фигура' );
+		hc.add(  'Трапеция' ,'Плоская_фигура' );
+		hc.add(  'Параллелограм' ,'Плоская_фигура' );
 
-	console.log( graph.search( 'Млекопитающие' ).getChilds( ) );
-	update(  graph.root );
+		hc.add(  'Прямоугольник' ,'Параллелограм' );
+			hc.add(  'Ромб' ,'Параллелограм' );
+			hc.add(  'Квадрат' ,'Параллелограм' );
+
+	hc.add( 'Объёмное_тело', 'Геометрический_объект' );
+		hc.add( 'Шар', 'Объёмное_тело' );
+		hc.add( 'Конус', 'Объёмное_тело' );
+		hc.add( 'Призма', 'Объёмное_тело' );
+		hc.add( 'Пирамида', 'Объёмное_тело' );
+
 </script>
 </body>
 </html>
