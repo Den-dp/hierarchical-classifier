@@ -1,3 +1,8 @@
+svg {
+	display: block;
+	margin: 0 auto;
+	}
+
 circle.node {
 	cursor: pointer;
 	stroke: #000;

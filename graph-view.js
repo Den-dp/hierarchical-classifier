@@ -1,20 +1,20 @@
-var w = 400,
-	h = 600,
+var w = 600,
+	h = 800,
 	node,
 	link,
 	root;
 
 var force = d3.layout.force()
 	.on("tick", tick)
-//	.charge(function(d) { return d._children ? -d.size / 100 : -30; })
-//	.linkDistance(function(d) { return d.target._children ? 80 : 30; })
+	.charge(function(d) { return d._children ? -d.size / 100 : -250; })
+	.linkDistance(function(d) {	return d.target._children ? 160 : 80; })
 	.size([w, h - 160]);
 
-var vis = d3.select("body").append("div")
+var vis = d3.select("body").append("svg")
 	.attr("width", w)
 	.attr("height", h);
 
-function update(subtree){
+function update1(subtree){
 	subtree = flatten(subtree);
 	console.log(subtree);
 	var z = vis.selectAll('div').data(subtree, function(d){return d.name;});
@@ -23,7 +23,7 @@ function update(subtree){
 	z.exit().remove();
 }
 
-function update1( json ) {
+function update( json ) {
 	root = json;
 	root.fixed = true;
 	root.x = w / 2;
@@ -39,7 +39,7 @@ function update1( json ) {
 
 	// Update the links…
 	link = vis.selectAll("line.link")
-		.data(links, function(d) { return d.target.id; });
+		.data(links);//, function(d) { return d.target.id; });
 
 	// Enter any new links.
 	link.enter().insert("line", ".node")
@@ -49,7 +49,7 @@ function update1( json ) {
 	link.exit().remove();
 
 	node = vis.selectAll("g.node")
-		.data( nodes , function(d) { return d.id; })
+		.data( nodes , function(d) { return d.id; });
 
 	node.enter().insert("g",".node")
 		/*.enter()//.insert("g",".node")
@@ -57,23 +57,23 @@ function update1( json ) {
 //		.attr("class","node")
 //		.append("g")
 		.attr("class", "node")
-		.attr("transform", function(d) {
+		/*.attr("transform", function(d) {
 			return "translate(" + (d.x) + "," + (d.y) + ")";
-		})
+		})*/
 		// .on("click", click)
 		// .call(force.drag);
-
+		.call(force.drag);
 	// Update the nodes…
 //	node = vis.selectAll("circle.node")
 //		.data(nodes)//, function(d) { return d.id; })
 //		.style("fill", color);
 	node.insert("circle")
-		.attr("r",5)
-		.call(force.drag);
+		.attr("r",10)
+
 
 
 	node.insert("text")
-		.attr("dx", 8)
+		.attr("dx", 15)
 		.attr("dy", 3)
 		.attr("text-anchor", function(d){ return d.name; })
 		.text(function(d){ return d.name; });
@@ -115,8 +115,11 @@ function tick() {
 		.attr("x2", function(d) { return d.target.x; })
 		.attr("y2", function(d) { return d.target.y; });
 
-	node.attr("cx", function(d) { return d.x; })
-		.attr("cy", function(d) { return d.y; });
+	//node.attr("cx", function(d) { return d.x; })
+	//	.attr("cy", function(d) { return d.y; });
+	node.attr("transform", function(d) {
+		return "translate(" + d.x + "," + d.y + ")";
+	});
 }
 
 // Color leaf nodes orange, and packages white or blue.
