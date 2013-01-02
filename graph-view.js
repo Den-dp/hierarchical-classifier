@@ -54,13 +54,13 @@ function update( json ) {
 	node.insert("text")
 		.attr("dx", 15)
 		.attr("dy", 3)
-		.attr("text-anchor", function(d){ return d.name; })
 		.text(function(d){ return d.name; });
 
 	node.transition()
 		.attr("r", function(d) { return d.children ? 4.5 : Math.sqrt(d.size) / 10; });
 
 	node.exit().remove();
+	$('.node > * + * + * + *').parent().find('text').first().remove()
 }
 
 function tick() {

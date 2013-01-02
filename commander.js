@@ -1,4 +1,3 @@
-
 var demoCommandBox = new CommandBox({
 	inputSelector: '.simple-command-box',
 	dropDownMenuSelector: '.simple-dropdown-menu',
@@ -31,23 +30,14 @@ var demoCommandBox = new CommandBox({
 			hc.search( node );
 			return true;
 		}
+	},{
+		name: 'repaint',
+		shortcut: 'r',
+		description: '',
+		listener: function( ){
+			console.log( 'repaint' );
+			hc.repaint( );
+			return true;
+		}
 	}
 ]);
-
-/*
-var argsArray = [{
-	name: 'a',
-	description:'this is a'
-},{
-	name: 'b',
-	description:'this is b'
-}];
-
-demoCommandBox.addCommand(argsArray);
-demoCommandBox.addCommand({
-	name: 'c',
-	description: 'this is c'
-});
-demoCommandBox.removeCommand( 'c' );
-demoCommandBox.removeCommand( 'b' );
- */

@@ -2,9 +2,6 @@
 
 	scope.HierarchicalClassifier = function( graph, commandBox ){
 
-//		console.log( graph.search( 'Млекопитающие' ).getChilds( ) );
-//		update( graph.root );
-
 		this.add = function( child, parent ){
 			if ( !!parent ) {
 				graph.addNode( child, parent );
@@ -28,12 +25,28 @@
 
 		this.search = function( node ){
 			try {
-				var z = graph.search( node );
+				var findedNode = graph.search( node );
 			} catch (e) {
 				console.log( 'Нода с именем "' + node.name + '" не сущесвтует' );
 				return;
 			}
-			console.log( 'Найден ' + z.name );
+			var searchedRoot = undefined;
+			if (!!findedNode.parent){
+				searchedRoot = {
+					name: findedNode.parent.name,
+					parent: undefined,
+					children: null
+				};
+				searchedRoot.children = [findedNode];
+			} else {
+				searchedRoot = findedNode;
+			}
+			console.log( 'Найден ' + findedNode.name );
+			update( searchedRoot );
+
+		};
+
+		this.repaint = function( ){
 			update( graph.graphRootNode );
 		};
 	};
