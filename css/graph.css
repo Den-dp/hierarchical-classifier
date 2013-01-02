@@ -14,6 +14,12 @@ svg {
 	stroke-width: 1.5px;
 	}
 
+circle.selected {
+	fill: #ffc7c5;
+	stroke: red;
+	stroke-width: 2px;
+	}
+
 .link {
 	fill: none;
 	stroke: #9ecae1;

@@ -14,13 +14,25 @@ var vis = d3.select("body").append("svg")
 	.attr("width", w)
 	.attr("height", h);
 
-function update( json ) {
-	root = json;
-	root.fixed = true;
-	root.x = w / 2;
-	root.y = 20;
-	var nodes = flatten(root),
-		links = d3.layout.tree().links(nodes);
+function update( json, searchedNodeName ) {
+	var nodes = undefined,
+		links = undefined;
+
+	if(!!json){
+		root = json;
+		root.fixed = true;
+		root.x = w / 2;
+		root.y = 20;
+		nodes = flatten(root);
+	} else {
+		root.fixed = true;
+		root.x = w / 2;
+		root.y = 20;
+		root.r = 0;
+		nodes = [];
+	}
+
+	links = d3.layout.tree().links(nodes);
 
 	// Restart the force layout.
 	force
@@ -49,7 +61,9 @@ function update( json ) {
 
 	// Update the nodes…
 	node.insert("circle")
-		.attr("r",10);
+		.attr("r",10)
+		.attr("class", function(d){
+			return d.name ===searchedNodeName ? 'selected' : ''; });
 
 	node.insert("text")
 		.attr("dx", 15)

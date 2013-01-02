@@ -4,11 +4,14 @@
 	<meta charset="UTF-8">
 	<title>Hierarchical classifier</title>
 
-	<link rel="stylesheet" href="style.css">
-	<link rel="stylesheet" href="command-box.css">
-	<link rel="stylesheet" href="graph.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/command-box.css">
+	<link rel="stylesheet" href="css/graph.css">
 
-	<script src="../d3/d3.v2.js"></script>
+	<script src="lib/d3.v2.js"></script>
+	<script src="lib/jquery-1.8.3.js"></script>
+	<script src="lib/graph-model.js"></script>
+
 	<script src="command-box/command-box.js"></script>
 </head>
 <body>
@@ -18,15 +21,13 @@
 </div>
 <div id="chart"></div>
 <script src="graph-view.js"></script>
-<script src="graph-model.js"></script>
 <script src="commander.js"></script>
 <script src="HierarchicalClassifier.js"></script>
-<script src="jquery-1.8.3.js"></script>
 <script>
 
-	var graph = new Graph( 'Геометрический_объект' )
-	var hc = new HierarchicalClassifier( graph, demoCommandBox );
-
+	var graph = new Graph(  ),
+		hc = new HierarchicalClassifier( graph, demoCommandBox );
+	hc.add('Геометрический_объект');
 	hc.add( 'Линия', 'Геометрический_объект');
 		hc.add( 'Прямая', 'Линия');
 		hc.add( 'Ломаная', 'Линия' );
@@ -46,7 +47,7 @@
 		hc.add( 'Шар', 'Объёмное_тело' );
 		hc.add( 'Конус', 'Объёмное_тело' );
 		hc.add( 'Призма', 'Объёмное_тело' );
-		hc.add( 'Пирамида', 'Объёмное_тело' );/*    */
+		hc.add( 'Пирамида', 'Объёмное_тело' );
 
 	console.log( graph );
 </script>

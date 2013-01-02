@@ -3,18 +3,19 @@
 	scope.HierarchicalClassifier = function( graph, commandBox ){
 
 		this.add = function( child, parent ){
-			if ( !!parent ) {
+			if ( !!child ) {
 				graph.addNode( child, parent );
+
+				commandBox.addCommand( {
+					name: child,
+					description: ''
+				} );
 			}
-			commandBox.addCommand( {
-				name: child,
-				description: ''
-			} );
 			update( graph.graphRootNode );
 
 		};
 
-		this.add( graph.graphRootNode.name );
+		//this.add( graph.graphRootNode.name );
 
 		this.delete = function( node ){
 			graph.deleteNode( node );
@@ -42,7 +43,7 @@
 				searchedRoot = findedNode;
 			}
 			console.log( 'Найден ' + findedNode.name );
-			update( searchedRoot );
+			update( searchedRoot, findedNode.name );
 
 		};
 

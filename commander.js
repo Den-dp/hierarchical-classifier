@@ -5,7 +5,6 @@ var demoCommandBox = new CommandBox({
 },[
 	{
 		name: 'add',
-		//				shortcut: '+',
 		description: '[child node] [parent node]',
 		listener: function( child, parent ){
 			console.log( 'add' );
