@@ -11,7 +11,7 @@
 			}
 			commandBox.addCommand( {
 				name: child,
-				description: child
+				description: ''
 			} );
 			update( graph.graphRootNode );
 

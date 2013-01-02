@@ -3,13 +3,18 @@ svg {
 	margin: 0 auto;
 	}
 
-circle.node {
-	cursor: pointer;
-	stroke: #000;
-	stroke-width: .5px;
+.node {
+	font: 10px Calibri;
+	font-weight: bolder;
 	}
 
-line.link {
+.node circle {
+	fill: #fff;
+	stroke: steelblue;
+	stroke-width: 1.5px;
+	}
+
+.link {
 	fill: none;
 	stroke: #9ecae1;
 	stroke-width: 1.5px;

@@ -7,7 +7,7 @@ var demoCommandBox = new CommandBox({
 	{
 		name: 'add',
 		//				shortcut: '+',
-		description: 'node name to add',
+		description: '[child node] [parent node]',
 		listener: function( child, parent ){
 			console.log( 'add' );
 			hc.add( child, parent );
@@ -16,7 +16,7 @@ var demoCommandBox = new CommandBox({
 	},{
 		name: 'delete',
 		shortcut: 'del',
-		description: 'node name to delete',
+		description: '[node name]',
 		listener: function( node ){
 			console.log( 'del' );
 			hc.delete( node );
@@ -25,7 +25,7 @@ var demoCommandBox = new CommandBox({
 	},{
 		name: 'search',
 		shortcut: 's',
-		description: 'node name to search',
+		description: '[node name] [depth]',
 		listener: function( node ){
 			console.log( 'search' );
 			hc.search( node );
