@@ -44,7 +44,7 @@
 			}
 			console.log( 'Найден ' + findedNode.name );
 			update( searchedRoot, findedNode.name );
-
+			// update( graph.graphRootNode, findedNode.name );
 		};
 
 		this.repaint = function( ){
