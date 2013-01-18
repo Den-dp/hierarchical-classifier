@@ -1,0 +1,27 @@
+svg {
+	display: block;
+	margin: 0 auto;
+	}
+
+.node {
+	font: 10px Calibri;
+	font-weight: bolder;
+	}
+
+.node circle {
+	fill: #fff;
+	stroke: steelblue;
+	stroke-width: 1.5px;
+	}
+
+circle.selected {
+	fill: #ffc7c5;
+	stroke: red;
+	stroke-width: 2px;
+	}
+
+.link {
+	fill: none;
+	stroke: #9ecae1;
+	stroke-width: 1.5px;
+	}
